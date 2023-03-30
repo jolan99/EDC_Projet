@@ -3,7 +3,7 @@ import numpy as np
 # vérifier qu'on a bien le bon ordre entre hauteur et largeur : villes/casques
 
 class data:
-    def __init__(self,Temps_fabrication,Temps_max,Demandes,Distances, nb_usines,nb_modeles,nb_villes, nom_usines,nom_casques,nom_villes):
+    def __init__(self,Temps_fabrication,Temps_max,Demandes,Distances, nb_usines,nb_modeles,nb_villes, nom_usines,nom_casques,nom_villes,cost_km):
         self.Temps_fabrication = Temps_fabrication
         self.Temps_max = Temps_max
         self.Demandes = Demandes
@@ -14,6 +14,7 @@ class data:
         self.nom_usines = nom_usines
         self.nom_casques = nom_casques
         self.nom_villes = nom_villes
+        self.cost_km = cost_km
 
     def print(self):
         print("######### INSTANCE : #########")
@@ -38,7 +39,7 @@ class data:
 
 
 
-def lecture (datafileName):
+def lecture(datafileName):
 
     #ouverture du fichier, le ferme automatiquement à la fin et gère les exceptions
     nom_usines=["Bordeaux","Lyon","Nanterre"]
@@ -83,8 +84,8 @@ def lecture (datafileName):
             for m in range(nb_modeles):
                 Temps_fabrication[m][u] = lineTab[m]
                 
-        instance = data(Temps_fabrication,Temps_max,Demandes,Distances, nb_usines,nb_modeles,nb_villes,nom_usines,nom_casques,nom_villes)
+        instance = data(Temps_fabrication,Temps_max,Demandes,Distances, nb_usines,nb_modeles,nb_villes,nom_usines,nom_casques,nom_villes,0.034)
     return instance 
 
 
-lecture ("data_etude_cas.txt").print()
+lecture("data_etude_cas.txt").print()
