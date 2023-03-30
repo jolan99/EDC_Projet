@@ -3,6 +3,8 @@ import sys
 from lecture_fichier import *
 from class_solution import *
 
+# regarder plus en détail les données, en utilisant dataframe par exemple 
+
 with localsolver .LocalSolver() as ls:
     m = ls.model
     #Dimensions
@@ -31,11 +33,11 @@ with localsolver .LocalSolver() as ls:
     m.minimize(m.sum(m.sum(m.sum(x[i][j][k]*instance.Distances[j][k]*instance.cost_km for i in range(instance.nb_modeles))for j in range(instance.nb_usines))for k in range(instance.nb_villes)))
 
     m.close()
-
-    if len(sys.argv) >= 3:
-        ls.param.time_limit = int(sys.argv[2])
-    else:
-        ls.param.time_limit = 2
+    ls.param.time_limit = 30
+    # if len(sys.argv) >= 3:
+    #     ls.param.time_limit = int(sys.argv[2])
+    # else:
+    #     ls.param.time_limit = 30
     ls.solve()
     # import ipdb;ipdb.set_trace()
     qtt_livree = np.zeros((instance.nb_modeles,instance.nb_usines,instance.nb_villes))
