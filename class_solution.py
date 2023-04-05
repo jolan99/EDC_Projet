@@ -1,3 +1,4 @@
+import pandas as pd 
 class solution:
     def __init__(self,qtt_livree,objective_value, nb_usines,nb_modeles,nb_villes, nom_usines,nom_casques,nom_villes,Temps_fabrication,cost_km,Distances):
         self.qtt_livree = qtt_livree
@@ -17,13 +18,33 @@ class solution:
         print("-----------")
         print("La solution est la suivante : ")
         print("-----------")
-        for k in range(self.nb_villes):
-            print("Le magasin de {} a recu ".format(self.nom_villes[k]))
-            for j in range(self.nb_usines):
-                print("      depuis l'usine de {}".format(self.nom_usines[j]))
-                for i in range(self.nb_modeles):
-                    print("      {} unités de {}".format(self.qtt_livree[i][j][k],self.nom_casques[i]))
-            print(" ")
+       
+        
+        df1 = pd.DataFrame(self.qtt_livree[0])
+        df1.columns = self.nom_villes
+        df1 = df1.T
+        df1.columns = self.nom_usines
+        df2 = pd.DataFrame(self.qtt_livree[1])
+        df2.columns = self.nom_villes
+        df2 = df2.T
+        df2.columns = self.nom_usines
+        df3 = pd.DataFrame(self.qtt_livree[2])
+        df3.columns = self.nom_villes
+        df3 = df3.T
+        df3.columns = self.nom_usines
+        
+        df1bis = pd.concat([df1.Bordeaux,df2.Bordeaux,df3.Bordeaux],axis=1,keys = self.nom_casques)
+        df2bis = pd.concat([df1.Lyon,df2.Lyon,df3.Lyon],axis=1,keys = self.nom_casques)
+        df3bis = pd.concat([df1.Nanterre,df2.Nanterre,df3.Nanterre],axis=1,keys = self.nom_casques)
+        sol = pd.concat([df1bis,df2bis,df3bis],axis=1,keys = self.nom_usines)
+       
+        
+        
+        
+        print(sol)
+        with open('solutions.txt', 'w') as f:
+            dfAsString = sol.to_string(header=True, index=True)
+            f.write(dfAsString)
         print("------------ temps par usine : ")
         for j in range(self.nb_usines):
             nb_heure = 0
@@ -52,9 +73,3 @@ class solution:
             print("Le cout de transport depuis l'usine de {} est {} ".format(self.nom_usines[j],cout_usine))
         print("---------------")
         print("Le cout total est {} ".format(cout_total))
-
-
-
-
-                
-                    
