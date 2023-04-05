@@ -15,7 +15,7 @@ class solution:
     def print(self):
         print("La valeur de la solution est : {}".format(self.objective_value))
         print("-----------")
-        print("La solutione est la suivante : ")
+        print("La solution est la suivante : ")
         print("-----------")
         for k in range(self.nb_villes):
             print("Le magasin de {} a recu ".format(self.nom_villes[k]))

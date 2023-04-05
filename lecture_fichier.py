@@ -1,4 +1,5 @@
-import numpy as np 
+import numpy as np
+import pandas as pd 
 
 # vérifier qu'on a bien le bon ordre entre hauteur et largeur : villes/casques
 
@@ -44,7 +45,7 @@ def lecture(datafileName):
     #ouverture du fichier, le ferme automatiquement à la fin et gère les exceptions
     nom_usines=["Bordeaux","Lyon","Nanterre"]
     nom_casques=["Grosson","Rapdeouf","Zoukafon"]
-    nom_villes = ["Lille","Clichy","Reims","Amiens","Strasbourg","Rennes","Clermont","Orléans","Nantes","Besançon","Vincennes","Marseille","Bordaux","Dijon","Montpellier","Limoges","Metz","Toulouse","Caen","Poitiers","Bayonne"]
+    nom_villes = ["Lille","Clichy","Reims","Amiens","Strasbourg","Rennes","Clermont","Orléans","Nantes","Besançon","Vincennes","Marseille","Bordeaux","Dijon","Montpellier","Limoges","Metz","Toulouse","Caen","Poitiers","Bayonne"]
     nb_usines = 3
     nb_villes = 21
     nb_modeles = 3
@@ -88,4 +89,20 @@ def lecture(datafileName):
     return instance 
 
 
-lecture("data_etude_cas.txt").print()
+# data = lecture("data_etude_cas.txt")
+# print(data.Temps_fabrication[0][2])
+# df1 = pd.DataFrame(data.Temps_fabrication)
+# df1.columns = data.nom_casques
+# df2 = pd.DataFrame(data.Temps_max)
+# # df2.rows = data.nom_usines
+# df3 = pd.DataFrame(data.Demandes)
+# df4 = pd.DataFrame(data.Distances)
+# print("essai:",data.Distances[1][15])
+# print("les temps de fabrication : ")
+# print(df1)
+# print("le temps max dispo par usine")
+# print(df2)
+# print("Les demandes : ")
+# print(df3)
+# print("les distances entre usine et magasin : ")
+# print(df4)
