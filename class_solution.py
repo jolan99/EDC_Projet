@@ -14,8 +14,8 @@ class solution:
         self.Distances = Distances
     
     def print(self):
-        print("La valeur de la solution est : {}".format(self.objective_value))
-        print("-----------")
+        # print("La valeur de la solution est : {}".format(self.objective_value))
+        # print("-----------")
         print("La solution est la suivante : ")
         print("-----------")
        
