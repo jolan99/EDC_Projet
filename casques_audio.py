@@ -5,12 +5,12 @@ from class_solution import *
 
 # regarder plus en détail les données, en utilisant dataframe par exemple 
 
-def solve():
+def solve(instance):
     with localsolver .LocalSolver() as ls:
         m = ls.model
         #Dimensions
         
-        instance = lecture("data_etude_cas.txt") 
+        # instance = lecture("data_etude_cas.txt") 
 
         # variables 
         x = [[[m.int(0,10000000000)for k in range(instance.nb_villes)]for j in range(instance.nb_usines)]for i in range(instance.nb_modeles)] # nb employés
@@ -56,7 +56,7 @@ def solve():
     return Solution
 
 
-# instance = lecture("data_etude_cas.txt")    
-Sol = solve()
+instance = lecture("data_etude_cas.txt")    
+Sol = solve(instance)
 print("##########################")
 Sol.print()
