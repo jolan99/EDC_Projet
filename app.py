@@ -167,6 +167,7 @@ chosen = st.sidebar.radio(
 if chosen == "Je veux utiliser le fichier exemple \"data_etude_cas.txt\"":
     #ici qqchose 
     instance = lecture("data_etude_cas.txt") 
+    Sol = solve(instance)
 elif chosen == "Je veux modifier les données manuellement":
     st.sidebar.write('Veuillez changer ici les données. Le calcul sera automatique.')
     instance = lecture("data_etude_cas.txt")  
@@ -174,8 +175,8 @@ elif chosen == "Je veux modifier les données manuellement":
     #     st.session_state = lecture("data_etude_cas.txt") 
     # st.sidebar.button('Réinitialiser le coût', on_click=reset)
     # cost_km:
-    st.sidebar.info('Coût par kilomètre (en centimes):', icon="💸")
-    Cost_km = st.sidebar.number_input('Veuillez indiquer ci-dessous le coût estimé',min_value=0.0,value = 3.4,step = 0.1,key='cost')
+    st.sidebar.info('Coût par kilomètre :', icon="💸")
+    Cost_km = st.sidebar.number_input('Veuillez indiquer ci-dessous le coût estimé (en centimes)',min_value=0.0,value = 3.4,step = 0.1,key='cost')
     instance.cost_km = Cost_km*0.01
     # def reset1():
     #     st.session_state.cost = 3.4
@@ -183,6 +184,7 @@ elif chosen == "Je veux modifier les données manuellement":
 
     # Distances :
     st.sidebar.info('Distances en km :', icon="🚄")
+    st.sidebar.write('Cliquez sur un quantité pour la modifier, puis appuyez sur entrée')
     dist = pd.DataFrame(instance.Distances)
     dist.columns = instance.nom_villes
     dist = dist.T
@@ -194,7 +196,8 @@ elif chosen == "Je veux modifier les données manuellement":
     # st.sidebar.button('Réinitialiser les distances', on_click=reset)
     
     # Demandes :
-    st.sidebar.info('Demandes :', icon="🚄")
+    st.sidebar.info('Demandes :', icon="❔")
+    st.sidebar.write('Cliquez sur un quantité pour la modifier, puis appuyez sur entrée')
     dem = pd.DataFrame(instance.Demandes)
     dem.columns = instance.nom_villes
     dem = dem.T
@@ -219,6 +222,7 @@ elif chosen == "Je veux modifier les données manuellement":
 
     # Temps de fabrications :
     st.sidebar.info('Durées de fabrication par modèle :', icon="🔨")
+    st.sidebar.write('Cliquez sur un quantité pour la modifier, puis appuyez sur entrée')
     temps_fab = pd.DataFrame(instance.Temps_fabrication)
     temps_fab.columns = instance.nom_usines
     temps_fab = temps_fab.T
@@ -232,19 +236,72 @@ elif chosen == "Je veux modifier les données manuellement":
     # def reset():
     #     st.session_state.instance = lecture("data_etude_cas.txt")
     # st.sidebar.button('Reset', on_click=reset)
+    Sol = solve(instance)
 
     
         
 
 elif chosen == "Je veux utiliser un autre fichier de données .txt" :
-    uploaded_file = st.file_uploader("Choisissez un fichier .txt")
-    if uploaded_file is not None:
-        stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
-        instance = lecture(stringio)
+    dfile = st.file_uploader("Choisissez un fichier .txt")
+    if dfile is not None:
+        file = StringIO(dfile.getvalue().decode("utf-8"))
+        # instance = lecture(stringio)
+
+        #####essais le 16 avril : 
+        nom_usines=["Bordeaux","Lyon","Nanterre"]
+        nom_casques=["Grosson","Rapdeouf","Zoukafon"]
+        nom_villes = ["Lille","Clichy","Reims","Amiens","Strasbourg","Rennes","Clermont","Orléans","Nantes","Besançon","Vincennes","Marseille","Bordeaux","Dijon","Montpellier","Limoges","Metz","Toulouse","Caen","Poitiers","Bayonne"]
+        nb_usines = 3
+        nb_villes = 21
+        nb_modeles = 3
+        Temps_fabrication = np.zeros((nb_modeles,nb_usines))
+        Temps_max = np.zeros(nb_usines)
+        Demandes=np.zeros((3,nb_villes))
+        Distances=np.zeros((nb_usines,nb_villes))
+
+        line = file.readline()  #inutiles, c'est #demande_ville_gamme
+        for v in range (nb_villes): # on lit les demandes par ville et pour chaque gamme 
+            line = file.readline() 
+            lineTab = line.split(", ")
+            Demandes[0][v] = lineTab[0]
+            Demandes[1][v] = lineTab[1]
+            Demandes[2][v] = lineTab[2]
+
+        line = file.readline()  #inutiles, c'est #distance_ville_usine
+        for v in range (nb_villes): # on lit les demandes par ville et pour chaque gamme 
+            line = file.readline() 
+            lineTab = line.split(", ")
+            for u in range(nb_usines):
+                Distances[u][v] = lineTab[u]
+               
+
+        line = file.readline()  #inutiles, c'est #capacite_max_production_usine
+        for u in range (nb_usines): # on lit les demandes par ville et pour chaque gamme 
+            line = file.readline() 
+            # lineTab = line.split(", ")
+            Temps_max[u] = line
+
+        line = file.readline()  #inutiles, c'est #temps_production_usine_gamme
+        for u in range (nb_usines): # on lit les demandes par ville et pour chaque gamme 
+            line = file.readline() 
+            lineTab = line.split(", ")
+            for m in range(nb_modeles):
+                Temps_fabrication[m][u] = lineTab[m]
+                
+        instance = data(Temps_fabrication,Temps_max,Demandes,Distances, nb_usines,nb_modeles,nb_villes,nom_usines,nom_casques,nom_villes,0.034)
+        Sol = solve(instance)
 
 # st.write('debug 1')
-Sol = solve(instance)
+# Sol = solve(instance)
 # st.write('debug 2')
+
+
+
+
+
+
+
+
 st.write('### Voici la répartition de production optimale pour avoir un coût total de transport minimal : ')
 st.write('Sur les lignes sont les magasins, et sur les colonnes sont les modèles de casque et les usines.')
 st.write(f'Par exemple : Il faudra envoyer au magasin de Lille {int(Sol.qtt_livree[0][2][0])} casques de modèle Grosson depuis l\'usine de Nanterre.')
@@ -258,21 +315,20 @@ for j in range(Sol.nb_usines):
     cout_total += cout_usine
 st.write('### Le coût total de cette solution est ',cout_total,' €')
 # st.snow()
-st.sidebar.info('Modèles à l\'étude :', icon="🎧")
 
 'Affichage sélectif : '
 options_casques = st.multiselect(
-    'Quel(s) modèle(s) voulez-vous sélctionner ?',
+    'Quel(s) modèle(s) voulez-vous sélectionner ?',
     instance.nom_casques,
     instance.nom_casques)
 
-options_villes = st.multiselect(
-    'Quelle(s) ville(s) voulez-vous sélctionner ?',
-    instance.nom_villes,
-    instance.nom_villes)
+# options_villes = st.multiselect(
+#     'Quelle(s) ville(s) voulez-vous sélectionner ?',
+#     instance.nom_villes,
+#     instance.nom_villes)
 
 options_usines = st.multiselect(
-    'Quelle(s) usine(s) voulez-vous sélctionner ?',
+    'Quelle(s) usine(s) voulez-vous sélectionner ?',
     instance.nom_usines,
     instance.nom_usines)
 
@@ -280,9 +336,9 @@ l1 = []
 for i in (options_casques):
     l1.append(instance.nom_casques.index(i))
 
-l2 = []
-for i in (options_villes):
-    l2.append(instance.nom_villes.index(i))
+# l2 = []
+# for i in (options_villes):
+#     l2.append(instance.nom_villes.index(i))
 
 l3 = []
 for i in (options_usines):
