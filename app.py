@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import time
-from casques_audio import *
+from script_JOLIOT_RAUWEL import *
 from io import StringIO
 
 # ce qu'on pourrait faire ce serait de faire une fonction, où l'utilisateur entre les données comme 
@@ -176,7 +176,10 @@ elif chosen == "Je veux modifier les données manuellement":
     # st.sidebar.button('Réinitialiser le coût', on_click=reset)
     # cost_km:
     st.sidebar.info('Coût par kilomètre :', icon="💸")
+    st.sidebar.write('Cliquez sur une quantité pour la modifier puis pressez entrée, ou utilisez les symboles + et -')
+
     Cost_km = st.sidebar.number_input('Veuillez indiquer ci-dessous le coût estimé (en centimes)',min_value=0.0,value = 3.4,step = 0.1,key='cost')
+
     instance.cost_km = Cost_km*0.01
     # def reset1():
     #     st.session_state.cost = 3.4
@@ -184,7 +187,7 @@ elif chosen == "Je veux modifier les données manuellement":
 
     # Distances :
     st.sidebar.info('Distances en km :', icon="🚄")
-    st.sidebar.write('Cliquez sur un quantité pour la modifier, puis appuyez sur entrée')
+    st.sidebar.write('Cliquez sur une quantité pour la modifier, puis appuyez sur entrée')
     dist = pd.DataFrame(instance.Distances)
     dist.columns = instance.nom_villes
     dist = dist.T
@@ -197,7 +200,7 @@ elif chosen == "Je veux modifier les données manuellement":
     
     # Demandes :
     st.sidebar.info('Demandes :', icon="❔")
-    st.sidebar.write('Cliquez sur un quantité pour la modifier, puis appuyez sur entrée')
+    st.sidebar.write('Cliquez sur une quantité pour la modifier, puis appuyez sur entrée')
     dem = pd.DataFrame(instance.Demandes)
     dem.columns = instance.nom_villes
     dem = dem.T
@@ -210,10 +213,12 @@ elif chosen == "Je veux modifier les données manuellement":
 
     # Temps disponible  :
     st.sidebar.info('Total heures disponibles  :', icon="👍")
+    st.sidebar.write('Cliquez sur une quantité pour la modifier puis pressez entrée, ou utilisez les symboles + et -')
     for i in range(instance.nb_usines):
         # j = st.slider(f'Usine de {instance.nom_usines[i]} : ', 0, 100000, instance.Temps_max[i])
         value_depart = int(instance.Temps_max[i])
-        j = st.sidebar.slider(f'Usine de {instance.nom_usines[i]} : ', 0, 100000, value_depart)
+        j = st.sidebar.number_input(f'Usine de {instance.nom_usines[i]} : ',min_value=0,value = value_depart,step = 1)
+        # j = st.sidebar.slider(f'Usine de {instance.nom_usines[i]} : ', 0, 100000, value_depart)
         instance.Temps_max[i] = j
     # def reset():
     #     for i in range(instance.nb_usines):
@@ -222,7 +227,7 @@ elif chosen == "Je veux modifier les données manuellement":
 
     # Temps de fabrications :
     st.sidebar.info('Durées de fabrication par modèle :', icon="🔨")
-    st.sidebar.write('Cliquez sur un quantité pour la modifier, puis appuyez sur entrée')
+    st.sidebar.write('Cliquez sur une quantité pour la modifier, puis appuyez sur entrée')
     temps_fab = pd.DataFrame(instance.Temps_fabrication)
     temps_fab.columns = instance.nom_usines
     temps_fab = temps_fab.T
@@ -242,12 +247,13 @@ elif chosen == "Je veux modifier les données manuellement":
         
 
 elif chosen == "Je veux utiliser un autre fichier de données .txt" :
-    dfile = st.file_uploader("Choisissez un fichier .txt")
+    dfile = st.sidebar.file_uploader("Choisissez un fichier .txt")
+    st.sidebar.write('Attention, il faut qu\'il soit au même format que le fichier fourni en exemple data_etude_cas.txt')
     if dfile is not None:
         file = StringIO(dfile.getvalue().decode("utf-8"))
-        # instance = lecture(stringio)
+        
 
-        #####essais le 16 avril : 
+         
         nom_usines=["Bordeaux","Lyon","Nanterre"]
         nom_casques=["Grosson","Rapdeouf","Zoukafon"]
         nom_villes = ["Lille","Clichy","Reims","Amiens","Strasbourg","Rennes","Clermont","Orléans","Nantes","Besançon","Vincennes","Marseille","Bordeaux","Dijon","Montpellier","Limoges","Metz","Toulouse","Caen","Poitiers","Bayonne"]

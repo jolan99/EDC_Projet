@@ -34,31 +34,10 @@ class solution:
         return sol
     
     def print(self):
-        # print("La valeur de la solution est : {}".format(self.objective_value))
-        # print("-----------")
+        
         print("La solution est la suivante : ")
         print("-----------")
        
-        
-        # df1 = pd.DataFrame(self.qtt_livree[0])
-        # df1.columns = self.nom_villes
-        # df1 = df1.T
-        # df1.columns = self.nom_usines
-        # df2 = pd.DataFrame(self.qtt_livree[1])
-        # df2.columns = self.nom_villes
-        # df2 = df2.T
-        # df2.columns = self.nom_usines
-        # df3 = pd.DataFrame(self.qtt_livree[2])
-        # df3.columns = self.nom_villes
-        # df3 = df3.T
-        # df3.columns = self.nom_usines
-        
-        # df1bis = pd.concat([df1.Bordeaux,df2.Bordeaux,df3.Bordeaux],axis=1,keys = self.nom_casques)
-        # df2bis = pd.concat([df1.Lyon,df2.Lyon,df3.Lyon],axis=1,keys = self.nom_casques)
-        # df3bis = pd.concat([df1.Nanterre,df2.Nanterre,df3.Nanterre],axis=1,keys = self.nom_casques)
-        # sol = pd.concat([df1bis,df2bis,df3bis],axis=1,keys = self.nom_usines)
-       
-        
         
         
         print(self.sol_to_df()) # affiche le dataframe
